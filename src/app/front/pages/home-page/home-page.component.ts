@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { ProductCardComponent } from '@products/components/product-card/product-card.component';
 import { ProductsService } from '@products/services/products.service';
 import { rxResource } from '@angular/core/rxjs-interop';
+import { JsonPipe } from '@angular/common';
 
 
 @Component({
@@ -14,12 +15,11 @@ export class HomePageComponent {
 
   private productService = inject(ProductsService);
 
+
   productsResource = rxResource({
     request: () => ({}),
     loader: ({ request }) => {
-      return this.productService.getProducts({
-        
-      });
+      return this.productService.getProducts({});
     }
   });
 
