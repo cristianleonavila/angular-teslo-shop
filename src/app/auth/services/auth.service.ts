@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { AuthResponse } from '@auth/interfaces/auth-response';
+import { SignupResponse } from '@auth/interfaces/sign-up-response';
 import { User } from '@auth/interfaces/user';
 import { catchError, map, Observable, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -87,6 +88,29 @@ export class AuthService {
     this._user.set(null);
     this._token.set(null);
     localStorage.removeItem('token');
+  }
+
+  signUp(fullName:string, email: string, password:string):Observable<boolean> {
+    return this.http.post<AuthResponse>(`${environment.API}/auth/register`, {
+      fullName,
+      email,
+      password
+    }).pipe(
+      tap( response => this.handleSignupSuccess(response)  ),
+      map(() => true),
+      catchError( error => this.handleAuthError(error))
+    );
+  }
+
+  private handleSignupSuccess(response: SignupResponse) {
+    console.log(response);
+
+  }
+
+  private handleSignupError(error: any):Observable<boolean> {
+    console.log(error);
+    return of(false);
+
   }
 
 }
