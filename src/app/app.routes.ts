@@ -10,6 +10,10 @@ export const routes: Routes = [
     ]
   },
   {
+    path: 'admin',
+    loadChildren: () => import('./dashboard/dashboard.routes')
+  },
+  {
     path: '',
     loadChildren: () => import('./front/front-routes')
   }

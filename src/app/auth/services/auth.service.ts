@@ -23,6 +23,8 @@ export class AuthService {
 
   private http = inject(HttpClient);
 
+  isAdmin = computed(() => this._user()?.roles.includes('admin') ?? false);
+
   checkStatusResource = rxResource({
     loader: () => this.checkAuthStatus()
   });
