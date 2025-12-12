@@ -4,6 +4,6 @@
   <span class="text-accent">{{productsResource.value()?.count}}</span>
 </h3>
 <div class="divider"></div>
-<app-pagination [numPages]="productsResource.value()?.pages ?? 0" [currentPage]="pagination.currentPage()"/>
-<app-product-table [products]="productsResource.value()!.products"/>
+<app-pagination [numPages]="productsResource.value()?.pages ?? 0" [currentPage]="pagination.currentPage()" [showRowsPerPage]="true" />
+<app-product-table [products]="productsResource.value()?.products"/>
 

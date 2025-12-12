@@ -12,7 +12,7 @@ import { CurrencyPipe } from '@angular/common';
 })
 export class ProductTableComponent {
 
-  products = input.required<Product[]>();
+  products = input.required<Product[] | undefined>();
 
   getProductStockClass(product: Product) {
     if ( product.stock <= 10 ) return "badge badge-error";

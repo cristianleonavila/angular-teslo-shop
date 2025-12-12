@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs';
@@ -16,5 +16,8 @@ export class PaginationService {
   ), {
     initialValue: 1
   })
+
+  static rowsPerPage = signal(10);
+
 
 }

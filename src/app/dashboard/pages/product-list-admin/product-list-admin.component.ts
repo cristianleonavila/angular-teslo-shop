@@ -4,6 +4,8 @@ import { ProductTableComponent } from "@products/components/product-table/produc
 import { ProductsService } from '@products/services/products.service';
 import { PaginationService } from '@share/pagination/pagination.service';
 import { PaginationComponent } from "@share/pagination/pagination.component";
+import { ActivatedRoute, Router } from '@angular/router';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-product-list-admin',
@@ -14,15 +16,18 @@ import { PaginationComponent } from "@share/pagination/pagination.component";
 export class ProductListAdminComponent {
 
   private productService = inject(ProductsService);
+
   pagination = inject(PaginationService);
 
   productsResource = rxResource({
-    request: () => ({page: this.pagination.currentPage() - 1}),
+    request: () => ({
+      page: this.pagination.currentPage() - 1,
+      limit: PaginationService.rowsPerPage()
+    }),
     loader: ({ request }) => {
-      console.log(request);
-
       return this.productService.getProducts({
-        offset: request.page * 9
+        offset: request.page * 9,
+        limit: request.limit
       });
     }
   });

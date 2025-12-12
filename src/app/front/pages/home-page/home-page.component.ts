@@ -19,12 +19,16 @@ export class HomePageComponent {
   pagination = inject(PaginationService);
 
   productsResource = rxResource({
-    request: () => ({page: this.pagination.currentPage() - 1}),
+    request: () => ({
+      page: this.pagination.currentPage() - 1,
+      limit: PaginationService.rowsPerPage()
+    }),
     loader: ({ request }) => {
       console.log(request);
 
       return this.productService.getProducts({
-        offset: request.page * 9
+        offset: request.page * 9,
+        limit: request.limit
       });
     }
   });

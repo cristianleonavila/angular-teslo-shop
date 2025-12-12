@@ -19,6 +19,7 @@ export class ProductsService {
   constructor() { }
 
   getProducts(options: Options): Observable<ProductsResponse> {
+    console.log(options);
     const { limit = 9, offset = 0, gender = ''} = options;
     const key = `${limit}-${offset}-${gender}`;
 
