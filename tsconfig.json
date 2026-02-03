@@ -9,7 +9,8 @@
       "@products/*": ["./src/app/products/*"],
       "@share/*": ["./src/app/components/*"],
       "@front/*": ["./src/app/front/*"],
-      "@dashboard/*": ["./src/app/dashboard/*"]
+      "@dashboard/*": ["./src/app/dashboard/*"],
+      "@utils/*": ["./src/app/utils/*"]
     },
     "outDir": "./dist/out-tsc",
     "strict": true,
