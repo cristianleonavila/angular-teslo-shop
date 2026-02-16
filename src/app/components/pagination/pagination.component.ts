@@ -5,7 +5,7 @@ import { PaginationService } from './pagination.service';
 
 @Component({
   selector: 'app-pagination',
-  imports: [RouterLink, CommonModule],
+  imports: [RouterLink, CommonModule, RouterLink],
   templateUrl: './pagination.component.html',
   styleUrl: './pagination.component.css'
 })

@@ -4,7 +4,7 @@ import { ProductTableComponent } from "@products/components/product-table/produc
 import { ProductsService } from '@products/services/products.service';
 import { PaginationService } from '@share/pagination/pagination.service';
 import { PaginationComponent } from "@share/pagination/pagination.component";
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { map } from 'rxjs';
 
 @Component({
