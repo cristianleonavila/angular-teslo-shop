@@ -1,4 +1,4 @@
-import { Component, inject, input, OnInit } from '@angular/core';
+import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
 import { ProductCarouselComponent } from '@products/components/product-carousel/product-carousel.component';
 import { Product, Size } from '@products/interfaces/product-response';
@@ -6,6 +6,7 @@ import { FormUtils } from '@utils/form-utils';
 import { FormErrorComponent } from "@share/form-error/form-error.component";
 import { ProductsService } from '@products/services/products.service';
 import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-product-details',
@@ -25,6 +26,8 @@ export class ProductDetailsComponent implements OnInit {
 
   router = inject(Router);
 
+  wasSaved = signal(false);
+
   productForm = this.fb.group({
     title: ['', Validators.required],
     description: ['', Validators.required],
@@ -37,7 +40,7 @@ export class ProductDetailsComponent implements OnInit {
     gender: ['men', [Validators.required, Validators.pattern(/men|women|kid|unisex/)]]
   });
 
-  onSubmit() {
+  async onSubmit() {
     const isValid = this.productForm.valid;
     this.productForm.markAllAsTouched();
     if ( !isValid ) return;
@@ -48,15 +51,17 @@ export class ProductDetailsComponent implements OnInit {
     };
 
     if ( this.product().id === "new") {
-      this.service.createProduct(productLike)
-      .subscribe(producto => this.router.navigate(['/admin/products', producto.id]))
+      const producto = await firstValueFrom(
+        this.service.createProduct(productLike)
+      );
+      this.router.navigate(['/admin/products', producto.id])
     } else {
-      this.service.updateProduct(this.product().id, productLike)
-      .subscribe(console.log);
+      await firstValueFrom(
+        this.service.updateProduct(this.product().id, productLike)
+      );
     }
-
-
-
+    this.wasSaved.set(true);
+    setTimeout(() => this.wasSaved.set(false), 3000)
   }
 
   ngOnInit(): void {
