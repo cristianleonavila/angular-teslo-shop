@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Gender, Product, ProductsResponse } from '@products/interfaces/product-response';
-import { delay, Observable, of, tap } from 'rxjs';
+import { delay, forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Options } from './interfaces/options';
 import { User } from '@auth/interfaces/user';
@@ -52,9 +52,16 @@ export class ProductsService {
     );
   }
 
-  updateProduct(id: string, product: Partial<Product>): Observable<Product> {
-    return this.http.patch<Product>(`${environment.API}/products/${id}`, product)
-    .pipe(
+  updateProduct(id: string, product: Partial<Product>, images?: FileList): Observable<Product> {
+    const currentImages = product.images ?? [];
+    return this.uploadImages(images).pipe(
+      map(imagesNames => ({
+        ...product,
+        images: [...currentImages, ...imagesNames]
+      })),
+      switchMap(
+        updatedProduct => this.http.patch<Product>(`${environment.API}/products/${id}`, updatedProduct)
+      ),
       tap( product => this.updateProductCache(id, product))
     );
   }
@@ -66,7 +73,7 @@ export class ProductsService {
     });
   }
 
-  createProduct(productLike: Partial<Product>):Observable<Product> {
+  createProduct(productLike: Partial<Product>, images?: FileList):Observable<Product> {
     return this.http.post<Product>(`${environment.API}/products`, productLike)
     .pipe(
       tap( product => this.updateProductCache(product.id, product))
@@ -88,5 +95,22 @@ export class ProductsService {
       user: {} as User
     };
     return newProduct;
+  }
+
+  uploadImages(images?: FileList):Observable<string[]> {
+    if ( !images ) return of([]);
+    const uploadObservables = Array.from( images ).map(imageFile => this.uploadImage(imageFile));
+    return forkJoin(uploadObservables).pipe(
+      tap(images => console.log(images))
+    );
+  }
+
+  uploadImage(image: File): Observable<string> {
+    const formData = new FormData();
+    formData.append('file', image);
+    return this.http.post<{fileName: string}>(`${environment.API}/files/product`, formData)
+    .pipe(
+      map(respose => respose.fileName)
+    );
   }
 }
