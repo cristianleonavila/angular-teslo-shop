@@ -114,8 +114,3 @@ export class ProductsService {
     );
   }
 }
-
-
-/**
-postgresql://neondb_owner:npg_K6O2UzjPasxr@ep-odd-shadow-ana67xm0-pooler.c-6.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
- */
